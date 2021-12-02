@@ -16,6 +16,6 @@ fun main() {
     return part1(summedInput)
   }
 
-  val testInput = readInput("Day01", "Day01").map { it.toInt() }
+  val testInput = readInput("Day01").map { it.toInt() }
   println(part2(testInput))
 }
