@@ -1,6 +1,8 @@
 import java.io.File
+import java.io.FileInputStream
 import java.math.BigInteger
 import java.security.MessageDigest
+import java.util.BitSet
 
 /**
  * Reads lines from the given input txt file.
