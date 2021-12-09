@@ -55,9 +55,9 @@ fun main() {
 
   }
 
-  fun part1(input: List<String>): Int {
-    val drawnNumbers = input[0].split(",").map { it.toInt() }
-    val bingoMatrix = input.drop(2).windowed(5, step = 6, false) { matrix ->
+  fun mapInputToMatrix(input: List<String>): List<BingoMatrix> =
+    input.drop(2).windowed(5, step = 6, false)
+    { matrix ->
       BingoMatrix(matrix.mapIndexed { i, row ->
         BingoMatrixRow(i,
           row.trim().split("\\s+".toRegex()).mapIndexed { ii, number ->
@@ -66,6 +66,11 @@ fun main() {
         )
       })
     }
+
+
+  fun part1(input: List<String>): Int {
+    val drawnNumbers = input[0].split(",").map { it.toInt() }
+    val bingoMatrix = mapInputToMatrix(input)
 
     drawnNumbers.forEach { drawnNumber ->
       bingoMatrix.forEach { matrix ->
@@ -88,9 +93,34 @@ fun main() {
   }
 
   fun part2(input: List<String>): Int {
-    return 0
+    val drawnNumbers = input[0].split(",").map { it.toInt() }
+    val bingoMatrix = mapInputToMatrix(input)
+    val matrixCopy = bingoMatrix.toMutableList()
+
+    drawnNumbers.forEach { drawnNumber ->
+      bingoMatrix.forEachIndexed { j, matrix ->
+        var foundItem: BingoMatrixItem? = null
+        val foundRow = matrix.rows.find { row ->
+          foundItem = row.items.find { it.number == drawnNumber }
+          foundItem != null
+        }
+
+        if (foundRow != null && foundItem != null) {
+          matrix.rows[foundRow.index].items[foundItem!!.index].checked = true
+          if (matrix.hasWon(foundRow, foundItem!!) && matrixCopy.contains(matrix)) {
+            if (matrixCopy.size == 1) {
+              return matrix.sumUnmarkedItems() * drawnNumber
+            }
+            matrixCopy.remove(matrix)
+          }
+        }
+      }
+    }
+
+    return -1
   }
 
   val testInput = readInput("Day04")
-  println(part1(testInput))
+  println(part2(testInput))
 }
+
