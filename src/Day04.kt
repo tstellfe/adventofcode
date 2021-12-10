@@ -94,10 +94,11 @@ fun main() {
 
   fun part2(input: List<String>): Int {
     val drawnNumbers = input[0].split(",").map { it.toInt() }
-    val bingoMatrix = mapInputToMatrix(input)
+    var bingoMatrix = mapInputToMatrix(input)
     val matrixCopy = bingoMatrix.toMutableList()
 
     drawnNumbers.forEach { drawnNumber ->
+      bingoMatrix = matrixCopy.toList()
       bingoMatrix.forEachIndexed { j, matrix ->
         var foundItem: BingoMatrixItem? = null
         val foundRow = matrix.rows.find { row ->
@@ -107,7 +108,7 @@ fun main() {
 
         if (foundRow != null && foundItem != null) {
           matrix.rows[foundRow.index].items[foundItem!!.index].checked = true
-          if (matrix.hasWon(foundRow, foundItem!!) && matrixCopy.contains(matrix)) {
+          if (matrix.hasWon(foundRow, foundItem!!)) {
             if (matrixCopy.size == 1) {
               return matrix.sumUnmarkedItems() * drawnNumber
             }
