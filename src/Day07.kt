@@ -7,8 +7,8 @@ fun main() {
     for (i in min..max) {
       possibilities.add(
         input.sumOf {
-          val result = (it - i)
-          if (result < 0) result.unaryMinus() else result
+          val fuel = (it - i)
+          if (fuel < 0) fuel.unaryMinus() else fuel
         }
       )
     }
@@ -17,7 +17,20 @@ fun main() {
   }
 
   fun part2(input: List<Int>): Int {
-    return 0
+    val min = input.minOrNull()!!
+    val max = input.maxOrNull()!!
+
+    val possibilities = mutableListOf<Int>()
+    for (i in min..max) {
+      possibilities.add(
+        input.sumOf {
+          val fuel = (it - i)
+          if (fuel < 0) (1..fuel.unaryMinus()).sum() else (1..fuel).sum()
+        }
+      )
+    }
+
+    return possibilities.minOrNull()!!
   }
 
   val testInput = readInput("Day04")
@@ -25,5 +38,5 @@ fun main() {
   val testInput1 = listOf(16, 1, 2, 0, 4, 2, 7, 1, 2, 14)
   val testInput2 = listOf(1,2,3)
 
-  println(part1(testInput2))
+  println(part2(testInput2))
 }
